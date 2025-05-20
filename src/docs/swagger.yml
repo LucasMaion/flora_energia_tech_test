@@ -1,12 +1,17 @@
 openapi: 3.0.0
 info:
-    title: API de Dicionário
+    title: API de Dicionário - Flora Energia - Tech Test
     version: 1.0.0
-    description: API para consulta e gerenciamento de palavras favoritas
+    description: API para consulta e gerenciamento de palavras favoritas - desenvolvido para o teste técnico da Flora Energia.
+    contact:
+        name: Lucas Andrade
+        email: lucasmgois@outlook.com
 
 servers:
     - url: http://localhost:3000
       description: Servidor local
+    - url: https://flora-energia-tech-test.onrender.com
+      description: Servidor de desenvolvimento (demonstração)
 
 paths:
     /auth/signup:
