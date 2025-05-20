@@ -87,7 +87,8 @@ paths:
 
                 "400":
                     description: Erro de validação
-    /users/me/favorites:
+
+    /user/me/favorites:
         get:
             security:
                 - BearerAuth: []
@@ -145,7 +146,7 @@ paths:
                 "400":
                     description: Erro de validação
 
-    /users/me/history:
+    /user/me/history:
         get:
             security:
                 - BearerAuth: []
