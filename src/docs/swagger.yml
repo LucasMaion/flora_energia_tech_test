@@ -1,0 +1,448 @@
+openapi: 3.0.0
+info:
+    title: API de Dicionário
+    version: 1.0.0
+    description: API para consulta e gerenciamento de palavras favoritas
+
+servers:
+    - url: http://localhost:3000
+      description: Servidor local
+
+paths:
+    /auth/signup:
+        post:
+            tags:
+                - Auth
+            summary: Se registrar como usuário na aplicação
+            description: Cria um novo usuário na aplicação
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/signup"
+            responses:
+                "200":
+                    description: Dados do usuário
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/authResponse"
+
+                "500":
+                    description: Erro interno do servidor
+
+                "400":
+                    description: Erro de validação
+
+    /auth/signin:
+        post:
+            tags:
+                - Auth
+            summary: Realizar login na aplicação
+            description: Realiza o login do usuário na aplicação
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/signin"
+            responses:
+                "200":
+                    description: Dados do usuário autenticado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/authResponse"
+
+                "500":
+                    description: Erro interno do servidor
+
+                "400":
+                    description: Erro de validação
+
+    /user/me:
+        get:
+            security:
+                - BearerAuth: []
+            tags:
+                - User
+            summary: Realizar login na aplicação
+            description: Realiza o login do usuário na aplicação
+            responses:
+                "200":
+                    description: Dados do usuário autenticado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/authResponse"
+
+                "500":
+                    description: Erro interno do servidor
+
+                "400":
+                    description: Erro de validação
+    /users/me/favorites:
+        get:
+            security:
+                - BearerAuth: []
+            tags:
+                - User
+            summary: Lista favoritos de um usuário
+            parameters:
+                - name: limit
+                  in: query
+                  description: Quantidade de resultados a retornar
+                  required: false
+                  schema:
+                      type: integer
+                      default: 10
+                      minimum: 1
+                      maximum: 100
+
+                - name: direction
+                  in: query
+                  description: A direção da paginação
+                  required: false
+                  schema:
+                      type: string
+                      enum: [next, prev, first, last]
+                      default: next
+
+                - name: nextCursor
+                  in: query
+                  description: o próximo cursor para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+                - name: previousCursor
+                  in: query
+                  description: o cursor anterior para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+            responses:
+                "200":
+                    description: Lista de palavras favoritas
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/compositeWords"
+                "500":
+                    description: Erro interno do servidor
+
+                "400":
+                    description: Erro de validação
+
+    /users/me/history:
+        get:
+            security:
+                - BearerAuth: []
+            tags:
+                - User
+            summary: Lista histórico de um usuário
+            parameters:
+                - name: limit
+                  in: query
+                  description: Quantidade de resultados a retornar
+                  required: false
+                  schema:
+                      type: integer
+                      default: 10
+                      minimum: 1
+                      maximum: 100
+
+                - name: direction
+                  in: query
+                  description: A direção da paginação
+                  required: false
+                  schema:
+                      type: string
+                      enum: [next, prev, first, last]
+                      default: next
+
+                - name: nextCursor
+                  in: query
+                  description: o próximo cursor para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+                - name: previousCursor
+                  in: query
+                  description: o cursor anterior para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+            responses:
+                "200":
+                    description: Lista de palavras solicitadas
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/compositeWords"
+                "500":
+                    description: Erro interno do servidor
+                "400":
+                    description: Erro de validação
+
+    /entries/en:
+        get:
+            security:
+                - BearerAuth: []
+            tags:
+                - Entries
+            summary: Lista histórico de um usuário
+            parameters:
+                - name: search
+                  in: query
+                  description: Filtro por nome ou email
+                  required: false
+                  schema:
+                      type: string
+                      example: lucas
+
+                - name: limit
+                  in: query
+                  description: Quantidade de resultados a retornar
+                  required: false
+                  schema:
+                      type: integer
+                      default: 10
+                      minimum: 1
+                      maximum: 100
+
+                - name: direction
+                  in: query
+                  description: A direção da paginação
+                  required: false
+                  schema:
+                      type: string
+                      enum: [next, prev, first, last]
+                      default: next
+
+                - name: nextCursor
+                  in: query
+                  description: o próximo cursor para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+                - name: previousCursor
+                  in: query
+                  description: o cursor anterior para paginação
+                  required: false
+                  schema:
+                      type: string
+                      example: eyJpZCI6IjEyMzQ1In0
+
+            responses:
+                "200":
+                    description: Lista de palavras solicitadas
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/words"
+                "500":
+                    description: Erro interno do servidor
+                "400":
+                    description: Erro de validação
+
+    /entries/en/{word}/favorite:
+        post:
+            security:
+                - BearerAuth: []
+            tags:
+                - Entries
+            summary: Favorita uma palavra
+            parameters:
+                - name: word
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: Palavra a ser favoritada
+                  example: banana
+
+            responses:
+                "204":
+                    description: Palavra favoritada com sucesso
+                "500":
+                    description: Erro interno do servidor
+
+                "400":
+                    description: Erro de validação
+
+    /entries/en/{word}/unfavorite:
+        delete:
+            security:
+                - BearerAuth: []
+            tags:
+                - Entries
+            summary: Desfavorita uma palavra
+            parameters:
+                - name: word
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: Palavra a ser desfavoritada
+                  example: banana
+
+            responses:
+                "204":
+                    description: Palavra favoritada com sucesso
+                "500":
+                    description: Erro interno do servidor
+                "400":
+                    description: Erro de validação
+                "404":
+                    description: Palavra não encontrada
+
+    /entries/en/{word}:
+        get:
+            security:
+                - BearerAuth: []
+            tags:
+                - Entries
+            summary: Coleta os detalhes de uma palavra
+            parameters:
+                - name: word
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: Palavra a ser coletada
+                  example: banana
+
+            responses:
+                "200":
+                    description: Palavra favoritada com sucesso
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                description: Detalhes da palavra encontrada
+                "500":
+                    description: Erro interno do servidor
+                "400":
+                    description: Erro de validação
+                "404":
+                    description: Palavra não encontrada
+
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        signup:
+            type: object
+            required:
+                - name
+                - email
+                - password
+            properties:
+                name:
+                    type: string
+                    example: Lucas Andrade
+                email:
+                    type: string
+                    format: email
+                    example: lucas@example.com
+                password:
+                    type: string
+                    format: password
+                    minLength: 6
+                    example: minhaSenha123
+        signin:
+            type: object
+            required:
+                - name
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    format: email
+                    example: lucas@example.com
+                password:
+                    type: string
+                    format: password
+                    minLength: 6
+                    example: minhaSenha123
+        authResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                id:
+                    type: number
+                    example: 1
+                name:
+                    type: string
+                    example: Lucas Andrade
+
+        words:
+            allOf:
+                - $ref: "#/components/schemas/queryMetadata"
+                - type: object
+                  properties:
+                      results:
+                          type: array
+                          items:
+                              type: string
+                              example: exemplo
+
+        compositeWords:
+            allOf:
+                - $ref: "#/components/schemas/queryMetadata"
+                - type: object
+                  properties:
+                      results:
+                          type: array
+                          items:
+                              type: object
+                              properties:
+                                  addedAt:
+                                      type: string
+                                      format: date-time
+                                      example: 2023-10-01T12:00:00Z
+                                  word:
+                                      type: string
+                                      example: exemplo
+
+        queryMetadata:
+            type: object
+            properties:
+                totalDocs:
+                    type: number
+                    example: 100
+                next:
+                    type: string
+                    example: eyJpZCI6IjEyMzQ1In0
+                previous:
+                    type: string
+                    example: eyJpZCI6IjEyMzQ1In0
+                hasNext:
+                    type: boolean
+                    example: true
+                hasPrevious:
+                    type: boolean
+                    example: false
